@@ -12,10 +12,12 @@
 
   <ItemGroup>
     <PackageReference Include="Elsa" Version="3.3.5" />
+    <PackageReference Include="Elsa.Api.Client" Version="3.3.5" />
     <PackageReference Include="Elsa.CSharp" Version="3.3.5" />
     <PackageReference Include="Elsa.EntityFrameworkCore" Version="3.3.5" />
     <PackageReference Include="Elsa.EntityFrameworkCore.Sqlite" Version="3.3.5" />
     <PackageReference Include="Elsa.EntityFrameworkCore.SqlServer" Version="3.3.5" />
+    <PackageReference Include="Elsa.Http" Version="3.3.5" />
     <PackageReference Include="Elsa.Identity" Version="3.3.5" />
     <PackageReference Include="Elsa.JavaScript" Version="3.3.5" />
     <PackageReference Include="Elsa.Liquid" Version="3.3.5" />
