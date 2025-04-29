@@ -49,3 +49,4 @@ await startupTaskRunner.RunStartupTasksAsync();
 
 // Run the application.
 await app.RunAsync();
+

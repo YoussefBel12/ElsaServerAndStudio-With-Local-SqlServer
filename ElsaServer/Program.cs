@@ -3,12 +3,18 @@ using Elsa.EntityFrameworkCore.Modules.Management;
 using Elsa.EntityFrameworkCore.Modules.Runtime;
 using Elsa.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Elsa.Webhooks;
+using Parlot.Fluent;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseStaticWebAssets();
 
 var services = builder.Services;
 var configuration = builder.Configuration;
+
+
+
+
 
 services
     .AddElsa(elsa => elsa
@@ -28,12 +34,39 @@ services
         .UseLiquid()
         .UseCSharp()
         .UseHttp(http => http.ConfigureHttpOptions = options => configuration.GetSection("Http").Bind(options))
-            
+
         .UseWorkflowsApi()
         .UseRealTimeWorkflows()
         .AddActivitiesFrom<Program>()
         .AddWorkflowsFrom<Program>()
-    );
+
+
+ );
+
+/*  // Enable Webhooks. also i changed it wih copilot i still dont know which one work
+    .UseWebhooks(webhooks =>
+    {
+        webhooks.ConfigureSinks = options =>
+        {
+            builder.Configuration.GetSection("Webhooks:Sinks").Bind(options);
+        };
+        webhooks.ConfigureSources = options =>
+        {
+            builder.Configuration.GetSection("Webhooks:Sources").Bind(options);
+        };
+    })); */
+
+
+
+
+
+
+
+
+
+
+
+
 
 services.AddCors(cors => cors.AddDefaultPolicy(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("*")));
 services.AddRazorPages(options => options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()));
