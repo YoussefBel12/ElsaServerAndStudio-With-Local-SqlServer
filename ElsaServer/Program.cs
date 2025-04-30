@@ -34,7 +34,7 @@ services
         .UseLiquid()
         .UseCSharp()
         .UseHttp(http => http.ConfigureHttpOptions = options => configuration.GetSection("Http").Bind(options))
-
+        .UseWebhooks()
         .UseWorkflowsApi()
         .UseRealTimeWorkflows()
         .AddActivitiesFrom<Program>()
