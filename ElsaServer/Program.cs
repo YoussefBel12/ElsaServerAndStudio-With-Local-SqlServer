@@ -1,3 +1,4 @@
+
 using Elsa.EntityFrameworkCore.Extensions;
 using Elsa.EntityFrameworkCore.Modules.Management;
 using Elsa.EntityFrameworkCore.Modules.Runtime;
@@ -5,6 +6,8 @@ using Elsa.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Elsa.Webhooks;
 using Parlot.Fluent;
+using ElsaServer;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseStaticWebAssets();
@@ -29,6 +32,11 @@ services
      .UseWorkflowManagement(management => management.UseEntityFrameworkCore(options => options.UseSqlServer(configuration.GetConnectionString("Elsa"))))
         .UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(options => options.UseSqlServer(configuration.GetConnectionString("Elsa"))))
 
+
+        .AddActivity<PrintMessage>() // Register your custom activity
+        .AddActivity<ExtractFirstStockActivity>()
+
+
         .UseScheduling()
         .UseJavaScript()
         .UseLiquid()
@@ -41,28 +49,11 @@ services
         .AddWorkflowsFrom<Program>()
 
 
+
+
+
+
  );
-
-/*  // Enable Webhooks. also i changed it wih copilot i still dont know which one work
-    .UseWebhooks(webhooks =>
-    {
-        webhooks.ConfigureSinks = options =>
-        {
-            builder.Configuration.GetSection("Webhooks:Sinks").Bind(options);
-        };
-        webhooks.ConfigureSources = options =>
-        {
-            builder.Configuration.GetSection("Webhooks:Sources").Bind(options);
-        };
-    })); */
-
-
-
-
-
-
-
-
 
 
 
