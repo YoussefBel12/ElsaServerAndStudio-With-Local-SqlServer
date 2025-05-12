@@ -18,6 +18,12 @@
 
             var first = stockArray?.FirstOrDefault();
             context.Set(firstStock, first);
+
+
+    
+           
+          
+
         }
     }
 

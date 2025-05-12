@@ -35,7 +35,10 @@ services
 
         .AddActivity<PrintMessage>() // Register your custom activity
         .AddActivity<ExtractFirstStockActivity>()
+        .AddActivity<CheckStockThresholdActivity>()
 
+        //basic activity from elsa i changed its logic 
+        .AddActivity<SwitchFlowTest>()
 
         .UseScheduling()
         .UseJavaScript()
