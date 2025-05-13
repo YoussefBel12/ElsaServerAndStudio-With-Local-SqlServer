@@ -11,7 +11,7 @@ namespace ElsaServer
     public class CheckStockThresholdActivity : CodeActivity
     {
         [Input] public Input<object?> firstStock { get; set; } = default!;
-        [Input] public Input<int> Threshold { get; set; } = new(30); // default threshold
+        [Input] public Input<int> Threshold { get; set; } = new(300); // default threshold
         [Output] public Output<bool> IsLow { get; set; } = default!;
 
 
@@ -36,7 +36,7 @@ namespace ElsaServer
 
 
         //up works down im trying to store in context variable
-
+        //below it set IsLow to the context variable check this more later
         protected override void Execute(ActivityExecutionContext context)
         {
             var stock = firstStock.Get(context);

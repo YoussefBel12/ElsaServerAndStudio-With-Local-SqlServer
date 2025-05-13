@@ -33,12 +33,16 @@ services
         .UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(options => options.UseSqlServer(configuration.GetConnectionString("Elsa"))))
 
 
-        .AddActivity<PrintMessage>() // Register your custom activity
+        .AddActivity<PrintMessage>() // custom print support vars
         .AddActivity<ExtractFirstStockActivity>()
         .AddActivity<CheckStockThresholdActivity>()
 
         //basic activity from elsa i changed its logic 
         .AddActivity<SwitchFlowTest>()
+
+        //new activities
+        .AddActivity<FilterStocksBelowThresholdActivity>()
+
 
         .UseScheduling()
         .UseJavaScript()

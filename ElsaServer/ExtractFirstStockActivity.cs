@@ -20,9 +20,11 @@
             context.Set(firstStock, first);
 
 
-    
-           
-          
+            //i added this
+            context.SetVariable("firstStock", first);
+
+
+
 
         }
     }
