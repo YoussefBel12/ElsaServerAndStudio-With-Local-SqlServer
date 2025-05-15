@@ -42,7 +42,7 @@ services
 
         //new activities
         .AddActivity<FilterStocksBelowThresholdActivity>()
-
+       
 
         .UseScheduling()
         .UseJavaScript()
