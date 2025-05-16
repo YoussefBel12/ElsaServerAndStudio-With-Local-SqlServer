@@ -31,5 +31,10 @@ when ever i find something need to remember i update this file
 also variables should be set in the context so they can be retrieved later
 so basicly u will USE ELSA With Custom ACTIVITIES most of the time 
 
+
+
+i will need to find a way with the notification probably related to 
+TOKENS and and roles and stuff that could be complicated
+
 */
 
