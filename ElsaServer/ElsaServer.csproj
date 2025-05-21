@@ -27,4 +27,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\Youssef\Desktop\PROJCT\elsa-server-and-studio\ElsaServer\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\Youssef\Desktop\PROJCT\elsa-server-and-studio\ElsaServer\.editorconfig" />
+  </ItemGroup>
+
 </Project>

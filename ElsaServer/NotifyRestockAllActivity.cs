@@ -1,4 +1,5 @@
 /*
+ 
 using Elsa.Extensions;
 using Elsa.Workflows;
 using Elsa.Workflows.Attributes;
@@ -64,10 +65,10 @@ namespace ElsaServer
     }
 }
 
-*/
 
 
-/*
+
+
 
 
 using Elsa.Extensions;
@@ -85,12 +86,15 @@ namespace ElsaServer
         // Inputs
         [Input] public Input<ICollection<int>> StockIds { get; set; } = default!;
         [Input] public Input<string> NotifyUrl { get; set; } = default!;
-        [Input] public Input<bool> UserConfirmed { get; set; } = new(false);
+        [Input]  public Input<bool> UserConfirmed { get; set; } = new(false);
 
         // Outputs
         [Output] public Output<string?> ResponseContent { get; set; } = default!;
         [Output] public Output<int> StatusCode { get; set; } = default!;
         [Output] public Output<bool> UpdatedUserConfirmed { get; set; } = default!;
+        [Output] public Output<string> WorkflowInstanceId { get; set; } = default!;
+        [Output] public Output<int> NotificationId { get; set; } = default!;
+
 
         protected override void Execute(ActivityExecutionContext context)
         {
@@ -98,13 +102,15 @@ namespace ElsaServer
             var stockIds = StockIds.Get(context) ?? Array.Empty<int>();
             var notifyUrl = NotifyUrl.Get(context) ?? "";
             var userConfirmed = UserConfirmed.Get(context);
-
+            var workflowInstanceId = context.WorkflowExecutionContext.Id;
+            
             // Create notification payload
             var notification = new
             {
                 stockIds,
                 message = "Stock is low for these items. Restock all?",
-                userConfirmed
+                userConfirmed,
+                workflowInstanceId
             };
 
             // Send HTTP request
@@ -114,6 +120,14 @@ namespace ElsaServer
             using var httpClient = new HttpClient();
             var response = httpClient.PostAsync(notifyUrl, content).Result;
             var responseContent = response.Content.ReadAsStringAsync().Result;
+
+
+
+           
+
+
+
+
 
             // Set outputs
             context.Set(ResponseContent, responseContent);
@@ -127,18 +141,18 @@ namespace ElsaServer
             // i added too much those are for the variable table
             context.SetVariable("UserConfirmed", userConfirmed);
             context.SetVariable("UpdatedUserConfirmed", userConfirmed);
-
+            context.SetVariable("WorkflowInstanceId", workflowInstanceId);
         }
     }
 }
 
 
 
+
 */
 
-
 //check up deepseekk to complete this tuesday
-
+/*
 
 using Elsa.Extensions;
 using Elsa.Workflows;
@@ -158,6 +172,74 @@ namespace ElsaServer
 
         [Output] public Output<string?> ResponseContent { get; set; } = default!;
         [Output] public Output<int> StatusCode { get; set; } = default!;
+        //i added this below
+        [Output] public Output<string> WorkflowInstanceId { get; set; } = default!;
+        [Output] public Output<int> NotificationId { get; set; } = default!;
+        protected override void Execute(ActivityExecutionContext context)
+        {
+            var stockIds = StockIds.Get(context) ?? Array.Empty<int>();
+            var notifyUrl = NotifyUrl.Get(context) ?? "";
+            var workflowInstanceId = context.WorkflowExecutionContext.Id;
+            //i added this
+           
+
+            var notification = new
+            {
+                stockIds,
+                message = "Stock is low for these items. Restock all?",
+                workflowInstanceId
+            };
+
+            var jsonBody = JsonSerializer.Serialize(notification);
+            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+            using var httpClient = new HttpClient();
+            var response = httpClient.PostAsync(notifyUrl, content).Result;
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+
+            context.Set(ResponseContent, responseContent);
+            context.Set(StatusCode, (int)response.StatusCode);
+
+
+
+            //i added this
+          
+            context.SetVariable("WorkflowInstanceId", workflowInstanceId);
+
+        }
+    }
+}
+
+*/
+
+
+
+
+
+
+
+
+
+
+using Elsa.Extensions;
+using Elsa.Workflows;
+using Elsa.Workflows.Attributes;
+using Elsa.Workflows.Models;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+
+namespace ElsaServer
+{
+    public class NotifyRestockAllActivity : CodeActivity
+    {
+        [Input] public Input<ICollection<int>> StockIds { get; set; } = default!;
+        [Input] public Input<string> NotifyUrl { get; set; } = default!;
+
+        [Output] public Output<string?> ResponseContent { get; set; } = default!;
+        [Output] public Output<int> StatusCode { get; set; } = default!;
+        [Output] public Output<string> WorkflowInstanceId { get; set; } = default!;
+        [Output] public Output<int?> NotificationId { get; set; } = default!;
 
         protected override void Execute(ActivityExecutionContext context)
         {
@@ -179,8 +261,28 @@ namespace ElsaServer
             var response = httpClient.PostAsync(notifyUrl, content).Result;
             var responseContent = response.Content.ReadAsStringAsync().Result;
 
+            int? notificationId = null;
+            try
+            {
+                using var doc = JsonDocument.Parse(responseContent);
+                if (doc.RootElement.TryGetProperty("id", out var idProp) && idProp.TryGetInt32(out var idVal))
+                    notificationId = idVal;
+            }
+            catch
+            {
+                // Optional: log or handle invalid JSON
+            }
+
             context.Set(ResponseContent, responseContent);
             context.Set(StatusCode, (int)response.StatusCode);
+            context.Set(WorkflowInstanceId, workflowInstanceId);
+            context.Set(NotificationId, notificationId);
+
+            context.SetVariable("WorkflowInstanceId", workflowInstanceId);
+            context.SetVariable("NotificationId", notificationId);
         }
     }
 }
+
+
+
