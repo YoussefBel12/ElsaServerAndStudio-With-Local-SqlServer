@@ -82,30 +82,25 @@ namespace ElsaServer
     using Elsa.Workflows.Attributes;
     using Elsa.Workflows.Models;
 
+    public class NotificationModel
+    {
+        public bool UserConfirmed { get; set; }
+    }
+
     public class ExtractNotification : CodeActivity
     {
-        [Input] public Input<object> Notification { get; set; } = default!;
-        [Output] public Output<bool?> UserConfirmed { get; set; } = default!;
+        [Input]
+        public Input<NotificationModel> Notification { get; set; } = default!;
+
+        [Output]
+        public Output<bool> UserConfirmed { get; set; } = default!;
 
         protected override void Execute(ActivityExecutionContext context)
         {
             var notification = Notification.Get(context);
-            bool? userConfirmed = null;
+            var userConfirmed = notification?.UserConfirmed ?? false;
 
-            // Safely handle JSON input (since it's application/json)
-            if (notification is JsonElement jsonElement)
-            {
-                // Check if "userConfirmed" exists (case-sensitive)
-                if (jsonElement.TryGetProperty("userConfirmed", out var userConfirmedProp) &&
-                    (userConfirmedProp.ValueKind == JsonValueKind.True ||
-                     userConfirmedProp.ValueKind == JsonValueKind.False))
-                {
-                    userConfirmed = userConfirmedProp.GetBoolean();
-                }
-            }
-
-            // Set output & workflow variable
-            context.Set(UserConfirmed, userConfirmed);
+            UserConfirmed.Set(context, userConfirmed);
             context.SetVariable("UserConfirmed", userConfirmed);
         }
     }
