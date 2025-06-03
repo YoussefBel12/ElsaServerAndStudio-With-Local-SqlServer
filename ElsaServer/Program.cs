@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Elsa.Webhooks;
 using Parlot.Fluent;
 using ElsaServer;
+using ElsaServer.TEST_ACTIVITIES;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,16 +35,22 @@ services
         .UseWorkflowRuntime(runtime => runtime.UseEntityFrameworkCore(options => options.UseSqlServer(configuration.GetConnectionString("Elsa"))))
 
 
-        .AddActivity<PrintMessage>() // custom print support vars
+        
         .AddActivity<ExtractFirstStockActivity>()
         .AddActivity<CheckStockThresholdActivity>()
 
-        //basic activity from elsa i changed its logic 
-        .AddActivity<SwitchFlowTest>()
+
+        //this one for TEST ACTIVITIES FOlder
+        .AddActivity<ExtractPurchase>()
+        .AddActivity<ExtractProductId>()
+        .AddActivity<FindStockByProductId>()
+        .AddActivity<ExtractStockId>()
 
         //new activities
         .AddActivity<FilterStocksBelowThresholdActivity>()
-       
+        .AddActivity<NotifyRestockAllActivity>()
+        .AddActivity<ForEachBelowThresholdIdsActivity>()
+        .AddActivity<ExtractNotification>()
 
         .UseScheduling()
         .UseJavaScript()

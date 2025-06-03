@@ -35,6 +35,9 @@ so basicly u will USE ELSA With Custom ACTIVITIES most of the time
 
 i will need to find a way with the notification probably related to 
 TOKENS and and roles and stuff that could be complicated
+update the notification dosent really have something to do with roles
+just can get access from DB like any other Data gettin a workflow
+specifik to user account gonna be hard
 
 */
 
