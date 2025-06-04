@@ -28,13 +28,25 @@ namespace ElsaServer.TEST_ACTIVITIES
         [Output]
         public Output<int> ProductId { get; set; } = default!;
 
+        //added output for price too to use on bills
+
+        [Output]
+        public Output<decimal> ProductPrice { get; set; } = default!; 
+
         protected override void Execute(ActivityExecutionContext context)
         {
             var product = Product.Get(context);
             var productId = product?.Id ?? 0;
+            var productPrice = product?.Price ?? 0m; // Add this
 
             ProductId.Set(context, productId);
             context.SetVariable("ProductId", productId);
+
+
+
+            ProductPrice.Set(context, productPrice); // Add this
+            context.SetVariable("ProductPrice", productPrice); // Add this
+
         }
     }
 }
