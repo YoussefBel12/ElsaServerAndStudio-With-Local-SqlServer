@@ -15,6 +15,9 @@
         public decimal Price { get; set; }
         public bool IsActive { get; set; }
         public DateTime Timestamp { get; set; }
+
+        //testing quantity 
+        public int Quantity { get; set; } = 1; // Defauly is 1 if not specified
     }
 
     public class ExtractPurchase : CodeActivity
@@ -24,6 +27,8 @@
 
         [Output] public Output<int> PurchaseId { get; set; } = default!;
         [Output] public Output<string> UserId { get; set; } = default!;
+        //another new output for quantity
+        [Output] public Output<int> Quantity { get; set; } = default!;
 
         protected override void Execute(ActivityExecutionContext context)
         {
@@ -31,7 +36,11 @@
 
             PurchaseId.Set(context, purchase.PurchaseId);
             UserId.Set(context, purchase.UserId);
+            //added this and its setvariable too
+            Quantity.Set(context, purchase.Quantity);
 
+
+            context.SetVariable("Quantity", purchase.Quantity);
             context.SetVariable("PurchaseId", purchase.PurchaseId);
             context.SetVariable("UserId", purchase.UserId);
 
