@@ -15,6 +15,7 @@
         public decimal Price { get; set; }
         public bool IsActive { get; set; }
         public DateTime Timestamp { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow; // Default to current time if not specified
 
         //testing quantity 
         public int Quantity { get; set; } = 1; // Defauly is 1 if not specified
@@ -30,6 +31,7 @@
         //another new output for quantity
         [Output] public Output<int> Quantity { get; set; } = default!;
 
+        [Output] public Output<DateTime> CreatedDate { get; set; } = default!;
         protected override void Execute(ActivityExecutionContext context)
         {
             var purchase = Purchase.Get(context);
@@ -38,12 +40,12 @@
             UserId.Set(context, purchase.UserId);
             //added this and its setvariable too
             Quantity.Set(context, purchase.Quantity);
-
+            CreatedDate.Set(context, purchase.CreatedDate);
 
             context.SetVariable("Quantity", purchase.Quantity);
             context.SetVariable("PurchaseId", purchase.PurchaseId);
             context.SetVariable("UserId", purchase.UserId);
-
+            context.SetVariable("CreatedDate", purchase.CreatedDate);
             // Set other variables as needed
             context.SetVariable("Name", purchase.Name);
             context.SetVariable("SKU", purchase.SKU);
